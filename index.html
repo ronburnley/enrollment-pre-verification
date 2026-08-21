@@ -86,7 +86,7 @@ h3{font-size:18px;font-weight:600}
 p{color:var(--ink-soft)}
 a{color:var(--ink);text-underline-offset:2px}
 button{font-family:inherit;font-size:16px;cursor:pointer}
-mark{background:var(--yellow);color:var(--ink);padding:0 6px;box-decoration-break:clone;-webkit-box-decoration-break:clone}
+mark{background:linear-gradient(to bottom,transparent 22%,var(--yellow) 22%);color:var(--ink);padding:0 6px;box-decoration-break:clone;-webkit-box-decoration-break:clone}
 :focus-visible{outline:2px solid var(--ink);outline-offset:2px;border-radius:4px}
 .visually-hidden{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
 
@@ -204,7 +204,7 @@ main{max-width:720px;margin:0 auto;padding:24px 20px 120px}
 .tip-box.open{display:block}
 details.why{margin-top:22px;border:1px solid var(--border);border-radius:var(--radius);background:var(--bg-soft)}
 details.why summary{padding:13px 16px;font-weight:600;font-size:15px;cursor:pointer;list-style:none;display:flex;align-items:center;gap:8px}
-details.why summary::before{content:"?";display:inline-flex;align-items:center;justify-content:center;width:20px;height:20px;border-radius:50%;background:var(--yellow);color:#1a1b1e;font-size:13px;flex:none}
+details.why summary::before{content:"?";display:inline-flex;align-items:center;justify-content:center;width:20px;height:20px;border-radius:50%;border:1.5px solid var(--ink-soft);color:var(--ink-soft);font-size:12px;font-weight:700;flex:none}
 details.why[open] summary{border-bottom:1px solid var(--border)}
 details.why .why-body{padding:13px 16px;font-size:14px;color:var(--ink-soft)}
 
@@ -225,7 +225,6 @@ details.why .why-body{padding:13px 16px;font-size:14px;color:var(--ink-soft)}
 .callout.warn{background:var(--amber-bg);color:var(--ink)}
 .callout.warn::before{content:"△";color:var(--amber);font-weight:700;flex:none}
 .callout.info{background:var(--blue-bg);color:var(--ink)}
-.callout.info::before{content:"i";font-weight:700;color:var(--blue);flex:none;border:1px solid var(--blue);border-radius:50%;width:18px;height:18px;display:inline-flex;align-items:center;justify-content:center;font-size:12px}
 .callout.good{background:var(--green-bg);color:var(--ink)}
 .callout.good::before{content:"✓";color:var(--green-dark);font-weight:700;flex:none}
 .compare-line{font-size:14px;color:var(--ink-soft);margin-top:10px}
@@ -323,7 +322,6 @@ details.why .why-body{padding:13px 16px;font-size:14px;color:var(--ink-soft)}
   padding:22px;transition:border-color .15s, box-shadow .15s;
 }
 .path-card:hover{border-color:var(--ink);box-shadow:var(--shadow)}
-.path-card .pc-icon{font-size:26px;margin-bottom:10px}
 .path-card strong{display:block;font-size:17px;margin-bottom:5px}
 .path-card span{font-size:14.5px;color:var(--ink-soft)}
 .trust-row{display:flex;flex-wrap:wrap;gap:18px;margin-top:26px;font-size:14px;color:var(--ink-soft)}
@@ -382,12 +380,10 @@ footer.site{border-top:1px solid var(--border);padding:20px;text-align:center;fo
 
     <div class="path-cards">
       <button class="path-card" id="pathNew">
-        <div class="pc-icon" aria-hidden="true">🌱</div>
         <strong>I'm new to marketplace coverage</strong>
         <span>Start a fresh application. We'll walk you through everything step by step.</span>
       </button>
       <button class="path-card" id="pathReturning">
-        <div class="pc-icon" aria-hidden="true">👋</div>
         <strong>I'm renewing my coverage</strong>
         <span>We have some of your information on file. We just need you to confirm it's still accurate.</span>
       </button>
@@ -981,6 +977,22 @@ function fieldError(inputId, on){
   f.classList.toggle('has-error', !!on);
 }
 function digits(s){ return String(s||'').replace(/\D/g,''); }
+function maskSSN(v){
+  if(String(v).includes('*')) return v; // keep the masked on-file value untouched
+  const d = digits(v).slice(0,9);
+  if(d.length>5) return d.slice(0,3)+'-'+d.slice(3,5)+'-'+d.slice(5);
+  if(d.length>3) return d.slice(0,3)+'-'+d.slice(3);
+  return d;
+}
+function maskPhone(v){
+  const d = digits(v).slice(0,10);
+  if(d.length>6) return '('+d.slice(0,3)+') '+d.slice(3,6)+'-'+d.slice(6);
+  if(d.length>3) return '('+d.slice(0,3)+') '+d.slice(3);
+  return d;
+}
+function validSSN(v){ return /^\*{3}-\*{2}-\d{4}$/.test(v) || digits(v).length===9; }
+function validPhone(v){ return digits(v).length===10; }
+function validEmail(v){ return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v); }
 function calcAge(dob){
   if(!dob) return null;
   const d = new Date(dob+'T00:00:00'); if(isNaN(d)) return null;
@@ -1517,7 +1529,21 @@ document.addEventListener('DOMContentLoaded', ()=>{
   /* --- step 2 bindings --- */
   const bindP = (id,key)=>$(id).addEventListener('input',e=>{ S.personal[key]=e.target.value; save(); });
   bindP('f-first','first'); bindP('f-last','last'); bindP('f-dob','dob');
-  bindP('f-ssn','ssn'); bindP('f-email','email'); bindP('f-phone','phone');
+  // Masked inputs: dashes/parens appear as you type; errors clear live and
+  // show on blur so typing never feels punished mid-entry.
+  const bindMasked = (id, key, mask, valid)=>{
+    const el = $(id);
+    el.addEventListener('input',()=>{
+      el.value = mask(el.value);
+      S.personal[key] = el.value;
+      if(valid(el.value)) fieldError(id,false); // clear as soon as it's right
+      save();
+    });
+    el.addEventListener('blur',()=>{ if(el.value) fieldError(id, !valid(el.value)); });
+  };
+  bindMasked('f-ssn','ssn',maskSSN,validSSN);
+  bindMasked('f-phone','phone',maskPhone,validPhone);
+  bindMasked('f-email','email',v=>v,validEmail);
   $('personalConfirmYes').addEventListener('click',()=>app.next());
   $('personalConfirmNo').addEventListener('click',()=>{
     $('personalOnfile').hidden = true; $('personalForm').hidden = false;
@@ -1528,6 +1554,7 @@ document.addEventListener('DOMContentLoaded', ()=>{
   document.querySelectorAll('#filingRow .chip').forEach(c=>c.addEventListener('click',()=>{
     S.household.filing = c.dataset.filing; setChips('filingRow','filing',c.dataset.filing); save();
   }));
+  $('m-ssn').addEventListener('input',e=>{ e.target.value = maskSSN(e.target.value); });
   $('memberAddBtn').addEventListener('click',()=>{
     $('memberForm').hidden=false; $('memberAddBtn').hidden=true; $('m-name').focus();
   });
