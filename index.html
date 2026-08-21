@@ -230,6 +230,15 @@ details.why .why-body{padding:13px 16px;font-size:14px;color:var(--ink-soft)}
 .callout.good::before{content:"✓";color:var(--green-dark);font-weight:700;flex:none}
 .compare-line{font-size:14px;color:var(--ink-soft);margin-top:10px}
 
+/* ---------- Document upload slots ---------- */
+.doc-slot{display:flex;justify-content:space-between;align-items:center;gap:14px;flex-wrap:wrap}
+.doc-slot .ds-info{flex:1;min-width:220px}
+.doc-file{display:flex;align-items:center;gap:8px;background:var(--green-bg);border-radius:var(--radius);padding:9px 14px;font-size:14.5px;font-weight:600}
+.doc-file::before{content:"✓";color:var(--green-dark);font-weight:700}
+.doc-file .replace{font-weight:400;color:var(--ink-soft);text-decoration:underline;background:none;border:none;font-size:13.5px;padding:0;margin-left:6px}
+.req-tag{display:inline-block;font-size:11px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;border-radius:99px;padding:2px 9px;background:var(--amber-bg);color:var(--amber);vertical-align:2px;margin-left:8px}
+.sample-link{background:none;border:none;color:var(--ink-soft);font-size:13px;text-decoration:underline;padding:0;margin-top:8px;display:block}
+
 /* ---------- Privacy notice ---------- */
 .privacy-note{background:var(--green-bg);border-radius:var(--radius);padding:14px 16px;font-size:14px;color:var(--ink);margin-top:16px;display:flex;gap:10px}
 .privacy-note::before{content:"🔒";flex:none}
@@ -569,18 +578,9 @@ footer.site{border-top:1px solid var(--border);padding:20px;text-align:center;fo
       </div>
     </div>
 
-    <div class="card">
-      <h3>Income documentation</h3>
-      <p class="sub">Which of these do you have handy? You won't upload anything today — this just speeds things up if we need proof later.</p>
-      <!-- INTEGRATION POINT: IRS Income Verification — in production, reported
-           income is checked against IRS tax records via the FTI data service,
-           and documentation is only requested when there's a mismatch. -->
-      <label class="check-row"><input type="checkbox" class="doc" value="W-2"> <span>W-2 from an employer</span></label>
-      <label class="check-row"><input type="checkbox" class="doc" value="1099"> <span>1099 (contract or gig work)</span></label>
-      <label class="check-row"><input type="checkbox" class="doc" value="Pay stubs"> <span>Recent pay stubs</span></label>
-      <label class="check-row"><input type="checkbox" class="doc" value="Tax return"> <span>Last year's tax return</span></label>
-    </div>
-
+    <!-- INTEGRATION POINT: IRS Income Verification — reported income is checked
+         against IRS tax records via the FTI data service; the documents collected
+         in the Supporting Documents step adjudicate any mismatch. -->
     <details class="why">
       <summary>Why do I need to provide this?</summary>
       <div class="why-body">Premium subsidies are based on your expected household income for the year you'll be covered, not last year's income. An accurate estimate now means the right subsidy all year and no surprise at tax time.</div>
@@ -787,7 +787,24 @@ footer.site{border-top:1px solid var(--border);padding:20px;text-align:center;fo
     </details>
   </section>
 
-  <!-- ================= STEP 7 · REVIEW ================= -->
+  <!-- ================= STEP 7 · SUPPORTING DOCUMENTS ================= -->
+  <section class="step" id="step-documents" hidden aria-labelledby="docsH">
+    <div class="step-head">
+      <h2 id="docsH" tabindex="-1">Upload your supporting documents</h2>
+      <p>New for 2028: your subsidy can't be confirmed until your documents are verified. Uploading them now means your verification won't get stuck waiting on paperwork.</p>
+    </div>
+    <!-- INTEGRATION POINT: Document Upload Service — accept photos/scans here,
+         virus-scan and store them, and attach them to the verification request
+         so any data mismatch can be adjudicated without a second consumer touch. -->
+    <div id="docSlots"></div>
+    <div class="callout info"><span>Photos from your phone are fine. Just make sure all four corners of the page are visible and the text is readable.</span></div>
+    <details class="why">
+      <summary>Why do I need to provide this?</summary>
+      <div class="why-body">Starting with Plan Year 2028, subsidies can't be applied until your information is verified. If the electronic check hits a mismatch, these documents resolve it immediately — without them, your subsidy would be delayed until you sent them in.</div>
+    </details>
+  </section>
+
+  <!-- ================= STEP 8 · REVIEW ================= -->
   <section class="step" id="step-review" hidden aria-labelledby="reviewH">
     <div class="step-head">
       <h2 id="reviewH" tabindex="-1">Review &amp; submit</h2>
@@ -805,7 +822,7 @@ footer.site{border-top:1px solid var(--border);padding:20px;text-align:center;fo
     </div>
   </section>
 
-  <!-- ================= STEP 8 · RESULT ================= -->
+  <!-- ================= STEP 9 · RESULT ================= -->
   <section class="step" id="step-result" hidden aria-labelledby="resultH">
     <div class="loading-wrap" id="resultLoading">
       <div class="spinner" aria-hidden="true"></div>
@@ -926,9 +943,11 @@ const STEPS = [
   { id:'step-citizenship',name:'Citizenship Status',     num:3 },
   { id:'step-coverage',   name:'Current Coverage',       num:4 },
   { id:'step-residence',  name:'Place of Residence',     num:5 },
-  { id:'step-review',     name:'Review & Submit',        num:6 },
-  { id:'step-result',     name:'Verification Result',    num:7 }
+  { id:'step-documents',  name:'Supporting Documents',   num:6 },
+  { id:'step-review',     name:'Review & Submit',        num:7 },
+  { id:'step-result',     name:'Verification Result',    num:8 }
 ];
+const TOTAL_STEPS = STEPS.length; // 9
 const STORAGE_KEY = 'stride-preverify-v1';
 
 function blankState(){
@@ -939,6 +958,7 @@ function blankState(){
     citizenship:{ citizen:'', status:'', docType:'', docNum:'' },
     coverage:{ hasCov:'', types:[], empOffer:'', afford:'' },
     residence:{ street:'', city:'', state:'TX', zip:'', county:'', twelve:'', prevStreet:'', prevCityState:'', moveDate:'' },
+    uploads:{ income:null, immigration:null, residency:null }, // {name, size} only — files aren't persisted in the prototype
     attested:false, result:null, verifiedAt:null, subsidy:null
   };
 }
@@ -1029,6 +1049,21 @@ function estSubsidy(income){
   return 0;
 }
 
+/* ---------- required documents ---------- */
+// Proof of income is always required for PY2028 pre-verification; the other
+// slots appear only when the consumer's answers make them relevant.
+function requiredDocs(){
+  const docs = [{ key:'income', title:'Proof of income', short:'proof of income',
+    hint:'A recent pay stub, W-2, 1099, or last year’s tax return.', sample:'sample-paystub.pdf' }];
+  if(S.citizenship.citizen==='no')
+    docs.push({ key:'immigration', title:'Immigration documentation', short:'your immigration document',
+      hint:'A photo of the document whose number you entered, like a green card or work permit.', sample:'sample-document.jpg' });
+  if(S.residence.twelve==='no')
+    docs.push({ key:'residency', title:'Proof of residency', short:'proof of residency',
+      hint:'A utility bill or lease showing your current address.', sample:'sample-utility-bill.pdf' });
+  return docs;
+}
+
 /* =====================================================================
    App controller
    ===================================================================== */
@@ -1042,17 +1077,18 @@ const app = {
     $(step.id).hidden = false;
 
     // progress + shared nav visibility
-    const showChrome = stepIdx>=1 && stepIdx<=6;
-    $('progressWrap').hidden = !(stepIdx>=1 && stepIdx<=7);
+    const reviewIdx = TOTAL_STEPS-2, resultIdx = TOTAL_STEPS-1;
+    const showChrome = stepIdx>=1 && stepIdx<=reviewIdx;
+    $('progressWrap').hidden = !(stepIdx>=1 && stepIdx<=resultIdx);
     $('wizardNav').hidden = !showChrome;
     if(stepIdx>=1){
-      $('progressStepLabel').textContent = `Step ${stepIdx+1} of 8`;
+      $('progressStepLabel').textContent = `Step ${stepIdx+1} of ${TOTAL_STEPS}`;
       $('progressStepName').textContent = step.name;
       $('progressBar').setAttribute('aria-valuenow', stepIdx+1);
-      $('progressFill').style.width = ((stepIdx+1)/8*100)+'%';
+      $('progressFill').style.width = ((stepIdx+1)/TOTAL_STEPS*100)+'%';
     }
-    $('navNext').textContent = stepIdx===6 ? 'Submit for Verification' : 'Continue';
-    $('navNext').disabled = stepIdx===6 ? !S.attested : false;
+    $('navNext').textContent = stepIdx===reviewIdx ? 'Submit for Verification' : 'Continue';
+    $('navNext').disabled = stepIdx===reviewIdx ? !S.attested : false;
     $('navBack').style.visibility = stepIdx===1 ? 'hidden':'visible';
 
     // returning-member conditional content
@@ -1065,8 +1101,9 @@ const app = {
     if(stepIdx===3) this.renderCitizenship();
     if(stepIdx===4) this.renderCoverage();
     if(stepIdx===5) this.renderResidence();
-    if(stepIdx===6) this.renderReview();
-    if(stepIdx===7) this.runVerification();
+    if(stepIdx===6) this.renderDocuments();
+    if(stepIdx===7) this.renderReview();
+    if(stepIdx===8) this.runVerification();
 
     save();
     // restart entry animation + move focus to the step heading for SR users
@@ -1097,12 +1134,12 @@ const app = {
 
   next(){
     const i = S.step;
-    if(i>=1 && i<=5){
+    if(i>=1 && i<=6){
       if(!this.validate(i)) return;
       this.show(i+1);
-    } else if(i===6){
+    } else if(i===7){
       if(!S.attested){ toast('Please confirm your information is accurate first.'); return; }
-      this.show(7);
+      this.show(8);
     }
   },
   back(){ if(S.step>1) this.show(S.step-1); else this.show(0); },
@@ -1148,6 +1185,13 @@ const app = {
       if(!/^\d{5}$/.test(S.residence.zip)) bad('f-zip');
       if(!S.residence.twelve){ toast('Let us know if you’ve been at this address 12 months.'); ok=false; }
     }
+    if(step===6){
+      const missing = requiredDocs().filter(d=>!S.uploads[d.key]);
+      if(missing.length){
+        toast(`Almost there — we still need ${missing.map(d=>d.short).join(' and ')} before you can submit.`);
+        ok=false;
+      }
+    }
     if(!ok){
       const firstErr = document.querySelector('.field.has-error input, .field.has-error select');
       if(firstErr) firstErr.focus();
@@ -1187,7 +1231,6 @@ const app = {
     $('inc-unemp').value = fmtInc(inc.unemp);
     $('inc-ss').value = fmtInc(inc.ss);
     $('inc-other').value = fmtInc(inc.other);
-    document.querySelectorAll('.doc').forEach(c=>c.checked = S.household.docs.includes(c.value));
     this.renderMembers();
     this.updateIncome();
   },
@@ -1308,7 +1351,42 @@ const app = {
     save();
   },
 
-  /* ---------- step 7: review ---------- */
+  /* ---------- step 7: documents ---------- */
+  renderDocuments(){
+    const wrap = $('docSlots');
+    wrap.innerHTML = requiredDocs().map(d=>{
+      const up = S.uploads[d.key];
+      return `<div class="card doc-slot">
+        <div class="ds-info">
+          <h3>${d.title}<span class="req-tag">Required</span></h3>
+          <p class="sub" style="margin-bottom:0">${d.hint}</p>
+          ${up?'':`<button class="sample-link" data-sample="${d.key}">No file handy? Use a sample document for this demo</button>`}
+        </div>
+        ${up
+          ? `<div class="doc-file"><span>${up.name}</span><button class="replace" data-replace="${d.key}">Replace</button></div>`
+          : `<button class="btn btn-secondary btn-sm" data-upload="${d.key}">Upload file</button>
+             <input type="file" accept="image/*,.pdf" class="visually-hidden" id="file-${d.key}" aria-label="Upload ${d.title}">`}
+      </div>`;
+    }).join('');
+    const attach = (key, file)=>{
+      S.uploads[key] = { name:file.name, size:file.size||0 };
+      save(); this.renderDocuments();
+      toast(`${file.name} attached.`);
+    };
+    wrap.querySelectorAll('[data-upload]').forEach(b=>b.addEventListener('click',()=>$('file-'+b.dataset.upload).click()));
+    wrap.querySelectorAll('input[type=file]').forEach(inp=>inp.addEventListener('change',()=>{
+      if(inp.files[0]) attach(inp.id.replace('file-',''), inp.files[0]);
+    }));
+    wrap.querySelectorAll('[data-sample]').forEach(b=>b.addEventListener('click',()=>{
+      const d = requiredDocs().find(x=>x.key===b.dataset.sample);
+      attach(d.key, { name:d.sample, size:0 });
+    }));
+    wrap.querySelectorAll('[data-replace]').forEach(b=>b.addEventListener('click',()=>{
+      S.uploads[b.dataset.replace] = null; save(); this.renderDocuments();
+    }));
+  },
+
+  /* ---------- step 8: review ---------- */
   sectionChanged(key){
     if(S.path!=='returning' || !ORIGINAL) return true; // new applicants: everything "new"
     return JSON.stringify(S[key]) !== JSON.stringify(ORIGINAL[key]);
@@ -1341,8 +1419,7 @@ const app = {
       sec('household','Household & income',2,`
         <dt>Filing status</dt><dd>${filingLabel(h.filing)}</dd>
         <dt>Household</dt><dd>${(p.first+' '+p.last).trim()} (self)${h.members.map(m=>'; '+m.name+' ('+relLabel(m.rel).toLowerCase()+')').join('')} — ${householdSize()} ${householdSize()===1?'person':'people'}</dd>
-        <dt>2028 income</dt><dd>${fmt$(incomeTotal())} <span style="font-weight:400;color:var(--ink-soft)">(${fplPct().toFixed(0)}% of FPL)</span></dd>
-        <dt>Documents</dt><dd>${h.docs.length?h.docs.join(', '):'None indicated'}</dd>`) +
+        <dt>2028 income</dt><dd>${fmt$(incomeTotal())} <span style="font-weight:400;color:var(--ink-soft)">(${fplPct().toFixed(0)}% of FPL)</span></dd>`) +
       sec('citizenship','Citizenship status',3,`
         <dt>Status</dt><dd>${citLabel}</dd>`) +
       sec('coverage','Current coverage',4,`
@@ -1351,7 +1428,9 @@ const app = {
       sec('residence','Place of residence',5,`
         <dt>Address</dt><dd>${r.street}, ${r.city}, ${r.state} ${r.zip}</dd>
         <dt>County</dt><dd>${r.county||'—'}</dd>
-        <dt>12+ months here</dt><dd>${r.twelve==='yes'?'Yes':'No'+(r.moveDate?` — moved ${fmtDate(r.moveDate)}`:'')}</dd>`);
+        <dt>12+ months here</dt><dd>${r.twelve==='yes'?'Yes':'No'+(r.moveDate?` — moved ${fmtDate(r.moveDate)}`:'')}</dd>`) +
+      sec('uploads','Supporting documents',6,
+        requiredDocs().map(d=>`<dt>${d.title}</dt><dd>${S.uploads[d.key]?S.uploads[d.key].name:'Missing'}</dd>`).join(''));
     document.querySelectorAll('[data-edit]').forEach(a=>a.addEventListener('click',e=>{
       e.preventDefault(); this.show(Number(a.dataset.edit));
     }));
@@ -1397,7 +1476,7 @@ const app = {
           <p style="margin-top:14px;max-width:46ch;margin-inline:auto">That's financial help applied straight to your premium. Your verification is valid for the PY 2028 enrollment period.</p>
           ${S.path==='returning' ? `<p class="compare-line">Last year's subsidy: ${fmt$(MOCK_MEMBER.lastYearSubsidy)}/mo</p>`:''}
           <div class="wizard-nav" style="justify-content:center">
-            <button class="btn btn-primary" onclick="app.show(9)" id="ctaShop">Continue to Plan Shopping →</button>
+            <button class="btn btn-primary" onclick="app.showShopping()" id="ctaShop">Continue to Plan Shopping →</button>
             <button class="btn btn-secondary" onclick="app.showDashboard()">Go to my dashboard</button>
           </div>
         </div>
@@ -1417,24 +1496,22 @@ const app = {
       range.addEventListener('input',upd); upd();
     }
     else if(S.result==='docs'){
-      const pool = ['Proof of income (recent pay stub, W-2, or 1099)','Proof of citizenship (passport or birth certificate)','Proof of residency (utility bill or lease)'];
-      const needed = pool.slice(0, 1+Math.floor(Math.random()*2));
+      const uploaded = requiredDocs().filter(d=>S.uploads[d.key]);
+      const flagged = uploaded[Math.floor(Math.random()*uploaded.length)] || requiredDocs()[0];
       body.innerHTML = `
         <div class="result-hero">
           <div class="result-icon docs" aria-hidden="true">📄</div>
-          <h2 tabindex="-1" id="resDoneH">We need a little more information</h2>
-          <p style="margin-top:10px;max-width:48ch;margin-inline:auto">Almost done — we just couldn't confirm everything automatically. Send us the following and we'll finish up within 1–2 business days.</p>
+          <h2 tabindex="-1" id="resDoneH">One document needs another look</h2>
+          <p style="margin-top:10px;max-width:48ch;margin-inline:auto">We received everything, but our reviewers couldn't read one of your documents clearly. Upload a clearer copy and we'll finish up within 1–2 business days.</p>
         </div>
         <div class="card">
-          <h3>Documents needed</h3>
-          ${needed.map(d=>`<label class="check-row"><input type="checkbox" disabled> <span>${d}</span></label>`).join('')}
-          <!-- INTEGRATION POINT: Document Upload Service — accept photos/scans,
-               store them, and attach to the pending verification case. -->
-          <div class="upload-drop"><strong>Upload documents</strong><br>Drag a photo or PDF here, or tap to take a picture<br><span style="font-size:13px">(placeholder — uploads aren't wired up in this prototype)</span></div>
+          <h3>Needs a clearer copy</h3>
+          <p class="sub">${flagged.title}${S.uploads[flagged.key]?` — the file you sent (<strong>${S.uploads[flagged.key].name}</strong>) was blurry or cut off.`:''}</p>
+          <div class="upload-drop"><strong>Re-upload ${flagged.title.toLowerCase()}</strong><br>Drag a photo or PDF here, or tap to take a picture<br><span style="font-size:13px">(placeholder — re-uploads aren't wired up in this prototype)</span></div>
         </div>
-        <div class="callout good">You can still browse plans, but your final subsidy amount will be confirmed once we verify your documents.</div>
+        <div class="callout good">You can still browse plans, but your final subsidy amount will be confirmed once we verify the new copy.</div>
         <div class="wizard-nav" style="justify-content:center">
-          <button class="btn btn-primary" onclick="app.show(9)">Browse plans anyway →</button>
+          <button class="btn btn-primary" onclick="app.showShopping()">Browse plans anyway →</button>
           <button class="btn btn-secondary" onclick="app.showDashboard()">Go to my dashboard</button>
         </div>`;
     }
@@ -1454,10 +1531,19 @@ const app = {
         <div class="callout info">Not receiving a subsidy now doesn't mean you won't qualify later. Life changes like a new job, marriage, or having a child may make you eligible.</div>
         <div class="wizard-nav" style="justify-content:center">
           <button class="btn btn-primary" onclick="toast('Manual review requested — we\\'ll email you within 3 business days. (Mock)')">Request manual review</button>
-          <button class="btn btn-secondary" onclick="app.show(9)">Shop full-price plans</button>
+          <button class="btn btn-secondary" onclick="app.showShopping()">Shop full-price plans</button>
         </div>`;
     }
     const h = body.querySelector('h2'); if(h) h.focus();
+  },
+
+  /* ---------- shopping placeholder ---------- */
+  showShopping(){
+    document.querySelectorAll('.step').forEach(s=>s.hidden=true);
+    $('step-shopping').hidden=false;
+    $('progressWrap').hidden = true; $('wizardNav').hidden = true;
+    const h=$('shopH'); h.focus();
+    window.scrollTo({top:0});
   },
 
   /* ---------- dashboard ---------- */
@@ -1479,7 +1565,7 @@ const app = {
       <div class="dash-card"><div class="k">Estimated subsidy</div><div class="v">${S.result==='verified'?fmt$(S.subsidy)+'/mo':'—'}</div><p style="font-size:14px;margin-top:6px">${S.result==='verified'?'Applied automatically when you shop.':'Available after verification.'}</p></div>
       <div class="dash-card"><div class="k">Open enrollment</div><div class="v">Nov 1, 2027</div><p style="font-size:14px;margin-top:6px">Shopping opens for Plan Year 2028 coverage.</p></div>
       <div class="dash-card"><div class="k">Next step</div>
-        <div style="margin-top:8px"><button class="btn btn-primary btn-sm" onclick="app.show(9)">${S.result==='verified'?'Preview plan shopping →':'Browse plans →'}</button></div>
+        <div style="margin-top:8px"><button class="btn btn-primary btn-sm" onclick="app.showShopping()">${S.result==='verified'?'Preview plan shopping →':'Browse plans →'}</button></div>
         <p style="font-size:14px;margin-top:10px">We'll notify you the moment enrollment opens.</p></div>`;
     const h=$('dashH'); h.focus();
     window.scrollTo({top:0});
@@ -1584,9 +1670,6 @@ document.addEventListener('DOMContentLoaded', ()=>{
       app.updateIncome();
     });
   });
-  document.querySelectorAll('.doc').forEach(c=>c.addEventListener('change',()=>{
-    S.household.docs = [...document.querySelectorAll('.doc:checked')].map(x=>x.value); save();
-  }));
 
   /* --- step 4 bindings --- */
   document.querySelectorAll('#citizenRow .chip').forEach(c=>c.addEventListener('click',()=>{
@@ -1691,10 +1774,10 @@ document.addEventListener('DOMContentLoaded', ()=>{
   const had = load();
   if(had && S.view==='dashboard'){
     app.showDashboard();
-  } else if(had && S.step>0 && S.step<7){
+  } else if(had && S.step>0 && S.step<8){
     const resumeStep = S.step;
     const stepName = STEPS[resumeStep] ? STEPS[resumeStep].name : '';
-    $('resumeText').textContent = `Welcome back! You left off on Step ${resumeStep+1} of 8 — ${stepName}. Ready to pick up where you left off?`;
+    $('resumeText').textContent = `Welcome back! You left off on Step ${resumeStep+1} of ${TOTAL_STEPS} — ${stepName}. Ready to pick up where you left off?`;
     $('resumeBanner').hidden = false;
     $('resumeYes').addEventListener('click',()=>{
       $('resumeBanner').hidden = true; app.show(resumeStep);
@@ -1704,8 +1787,8 @@ document.addEventListener('DOMContentLoaded', ()=>{
     });
     app.show(0,{noFocus:true});
     S.step = resumeStep; save(); // keep saved progress intact while the welcome screen shows
-  } else if(had && S.step>=7 && S.result){
-    app.show(7,{noFocus:true});
+  } else if(had && S.step>=8 && S.result){
+    app.show(8,{noFocus:true});
   } else {
     S = blankState(); ORIGINAL=null;
     app.show(0,{noFocus:true});
