@@ -200,6 +200,7 @@ main{max-width:720px;margin:0 auto;padding:24px 20px 120px}
   background:transparent;color:var(--ink-soft);font-size:12px;font-weight:700;
   vertical-align:2px;margin-left:5px;line-height:1;
 }
+.tip-link{background:none;border:none;padding:0;font:inherit;font-weight:600;color:inherit;cursor:pointer;text-decoration:underline dotted;text-decoration-thickness:1.5px;text-underline-offset:3px}
 .tip-box{display:none;background:var(--blue-bg);color:var(--ink);border-radius:var(--radius);padding:10px 14px;font-size:14px;margin:8px 0;max-width:52ch}
 .tip-box.open{display:block}
 details.why{margin-top:22px;border:1px solid var(--border);border-radius:var(--radius);background:var(--bg-soft)}
@@ -318,6 +319,7 @@ details.why .why-body{padding:13px 16px;font-size:14px;color:var(--ink-soft)}
 .path-cards{display:grid;gap:14px;margin-top:26px}
 @media(min-width:600px){.path-cards{grid-template-columns:1fr 1fr}}
 .path-card{
+  display:flex;flex-direction:column;align-items:flex-start;justify-content:flex-start;
   text-align:left;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-lg);
   padding:22px;transition:border-color .15s, box-shadow .15s;
 }
@@ -372,7 +374,7 @@ footer.site{border-top:1px solid var(--border);padding:20px;text-align:center;fo
     </div>
 
     <div class="callout info" style="max-width:56ch">
-      <span>New for 2028: everyone who wants financial help with premiums<button class="tip-btn" data-tip="tip-aptc" aria-expanded="false" aria-label="What is APTC?">?</button> needs to confirm their information each year, even if your coverage used to renew automatically.</span>
+      <span>New for 2028: everyone who wants <button class="tip-link" data-tip="tip-aptc" aria-expanded="false" aria-label="What is APTC? Tap to learn more">financial help with premiums</button> needs to confirm their information each year, even if your coverage used to renew automatically.</span>
     </div>
     <div class="tip-box" id="tip-aptc" role="note">
       <strong>APTC (Advance Premium Tax Credit)</strong> is the subsidy that lowers your monthly health insurance payment. Starting with 2028 coverage, it can't be applied until you verify your household information.
@@ -538,23 +540,23 @@ footer.site{border-top:1px solid var(--border);padding:20px;text-align:center;fo
       <div class="grid-2">
         <div class="field">
           <label for="inc-employment">Employment income (W-2)</label>
-          <input type="number" id="inc-employment" min="0" step="100" inputmode="numeric" class="inc" placeholder="0">
+          <input type="text" id="inc-employment" inputmode="numeric" class="inc" placeholder="0">
         </div>
         <div class="field">
           <label for="inc-self">Self-employment income</label>
-          <input type="number" id="inc-self" min="0" step="100" inputmode="numeric" class="inc" placeholder="0">
+          <input type="text" id="inc-self" inputmode="numeric" class="inc" placeholder="0">
         </div>
         <div class="field">
           <label for="inc-unemp">Unemployment benefits</label>
-          <input type="number" id="inc-unemp" min="0" step="100" inputmode="numeric" class="inc" placeholder="0">
+          <input type="text" id="inc-unemp" inputmode="numeric" class="inc" placeholder="0">
         </div>
         <div class="field">
           <label for="inc-ss">Social Security</label>
-          <input type="number" id="inc-ss" min="0" step="100" inputmode="numeric" class="inc" placeholder="0">
+          <input type="text" id="inc-ss" inputmode="numeric" class="inc" placeholder="0">
         </div>
         <div class="field">
           <label for="inc-other">Other income</label>
-          <input type="number" id="inc-other" min="0" step="100" inputmode="numeric" class="inc" placeholder="0">
+          <input type="text" id="inc-other" inputmode="numeric" class="inc" placeholder="0">
         </div>
       </div>
       <div class="income-total">
@@ -1179,11 +1181,12 @@ const app = {
   renderHousehold(){
     setChips('filingRow','filing',S.household.filing);
     const inc = S.household.income;
-    $('inc-employment').value = inc.employment || '';
-    $('inc-self').value = inc.self || '';
-    $('inc-unemp').value = inc.unemp || '';
-    $('inc-ss').value = inc.ss || '';
-    $('inc-other').value = inc.other || '';
+    const fmtInc = v => (Number(v)||0) ? Number(v).toLocaleString('en-US') : '';
+    $('inc-employment').value = fmtInc(inc.employment);
+    $('inc-self').value = fmtInc(inc.self);
+    $('inc-unemp').value = fmtInc(inc.unemp);
+    $('inc-ss').value = fmtInc(inc.ss);
+    $('inc-other').value = fmtInc(inc.other);
     document.querySelectorAll('.doc').forEach(c=>c.checked = S.household.docs.includes(c.value));
     this.renderMembers();
     this.updateIncome();
@@ -1518,7 +1521,7 @@ document.addEventListener('DOMContentLoaded', ()=>{
   $('saveTopBtn').addEventListener('click',()=>app.saveLater());
 
   /* tooltips */
-  document.querySelectorAll('.tip-btn').forEach(b=>{
+  document.querySelectorAll('.tip-btn,.tip-link').forEach(b=>{
     b.addEventListener('click',()=>{
       const box = $(b.dataset.tip);
       const open = box.classList.toggle('open');
@@ -1574,7 +1577,12 @@ document.addEventListener('DOMContentLoaded', ()=>{
   });
   const incMap = {'inc-employment':'employment','inc-self':'self','inc-unemp':'unemp','inc-ss':'ss','inc-other':'other'};
   Object.entries(incMap).forEach(([id,key])=>{
-    $(id).addEventListener('input',e=>{ S.household.income[key]=e.target.value; app.updateIncome(); });
+    $(id).addEventListener('input',e=>{
+      const d = digits(e.target.value).slice(0,9); // commas appear as you type
+      e.target.value = d ? Number(d).toLocaleString('en-US') : '';
+      S.household.income[key] = d ? Number(d) : '';
+      app.updateIncome();
+    });
   });
   document.querySelectorAll('.doc').forEach(c=>c.addEventListener('change',()=>{
     S.household.docs = [...document.querySelectorAll('.doc:checked')].map(x=>x.value); save();
