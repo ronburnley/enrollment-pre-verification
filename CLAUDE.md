@@ -58,10 +58,9 @@ Sampled from the live www.stridehealth.com/shop: ink `#1A1B1E`, border
 `#DCDDE2`, highlight yellow `#FFF98D`, brand green `#37CD8F`, 8px-radius dark
 primary / outlined secondary buttons. Fonts: Oswald stands in for Founders
 Grotesk X-Cond (condensed headlines), Hanken Grotesk for Founders Grotesk
-(body). The real Stride script wordmark is inlined as a PNG data URI, inverted
-via CSS filter in dark mode. Light/dark theming uses CSS custom properties with
-a `data-theme` override on `<html>` (manual toggle) layered over
-`prefers-color-scheme`.
+(body). The real Stride script wordmark is inlined as a PNG data URI. The app is
+light mode only; dark mode was removed (no `prefers-color-scheme` blocks, no
+`data-theme` toggle).
 
 Design conventions from Ron's annotation rounds — keep these:
 - No emojis in UI chrome; no decorative icons in callouts.
