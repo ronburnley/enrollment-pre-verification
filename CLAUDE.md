@@ -4,20 +4,25 @@ Consumer-facing demo of an eligibility pre-verification flow for ACA marketplace
 enrollment, styled as a Stride Health product. Built for stakeholder demos, not
 production. Repo: https://github.com/ronburnley/enrollment-pre-verification
 
-## Premise
+Read `PRODUCT.md` for product scope and open policy questions, `DESIGN.md` for
+experience rules, `ARCHITECTURE.md` for the current system, and `AGENTS.md` for
+repository-specific working instructions. This file contains detailed notes for
+the existing single-file implementation.
 
-Starting with Plan Year 2028 (Open Enrollment opens November 1, 2027), federal
-rules require every consumer to actively verify eligibility information before
-receiving APTC subsidies. Passive re-enrollment with subsidies is gone. This tool
-walks a consumer through verification before OE so they can shop on day one with
-a confirmed subsidy.
+## Prototype premise
 
-Key product decision (Ron, Aug 2026): document upload is **required for everyone
-before submission**. Under the PY2028 rules a data mismatch without documents on
-file delays the subsidy, so the flow collects proof up front rather than chasing
-documents after a mismatch. Slots are conditional on answers (income always;
-immigration docs for non-citizens; residency proof after a recent move), but no
-one can submit without their required documents attached.
+The demo explores a future state in which required eligibility information must
+be verified before APTC is issued for Plan Year 2028. CMS implementation details
+are still developing. Treat the flow, dates, status model, and eligibility
+elements shown here as product hypotheses unless `PRODUCT.md` links current
+authoritative guidance.
+
+Current demo decision (Aug 2026): document upload is **required before
+submission** for every demo path. This deliberately tests proactive evidence
+collection rather than claiming it is a universal PY2028 rule. Slots are
+conditional on answers (income always; immigration docs for non-citizens;
+residency proof after a recent move), and the prototype does not submit until
+the displayed slots have sample metadata attached.
 
 ## Architecture
 
@@ -88,6 +93,7 @@ Design conventions from Ron's annotation rounds — keep these:
 ## Deployment
 
 GitHub Pages serves `index.html` from `main` (Ron enabled it manually). Pushing
-to `main` deploys. Ron reviews by annotating screenshots in the Browser pane;
+to `main` deploys and therefore requires Ron's explicit production-deployment
+approval. Ron reviews by annotating screenshots in the Browser pane;
 implement annotation feedback, verify in the browser, then commit and push each
 round.
