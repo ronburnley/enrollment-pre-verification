@@ -225,12 +225,19 @@ details.why .why-body{padding:13px 16px;font-size:14px;color:var(--ink-soft)}
 .result-hero{text-align:center;padding:28px 0 8px}
 .result-icon{width:74px;height:74px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:36px;margin-bottom:18px}
 .result-icon.ok{background:var(--green-bg);color:var(--green-dark)}
+.result-icon.pending{background:var(--blue-bg);color:var(--blue)}
 .result-icon.docs{background:var(--amber-bg);color:var(--amber)}
 .result-icon.na{background:var(--bg-soft);color:var(--ink-soft)}
 .subsidy-line{font-size:18px;margin-top:8px}
 .subsidy-line .amt{font-family:var(--font-cond);font-size:40px;font-weight:500;background:var(--yellow);color:#1a1b1e;padding:0 10px}
 .upload-drop{border:2px dashed var(--border);border-radius:var(--radius-lg);padding:26px;text-align:center;color:var(--ink-soft);font-size:15px;margin-top:14px}
 .upload-drop strong{color:var(--ink)}
+
+/* ---------- Price label (shopping placeholder) ---------- */
+.price-label{border:1px solid var(--border);border-radius:var(--radius);padding:14px 16px;font-size:14.5px;text-align:left;background:var(--bg-card)}
+.price-label .pl-tag{display:inline-block;font-size:11px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;border-radius:99px;padding:2px 10px;margin-bottom:6px;background:var(--border);color:var(--ink-soft)}
+.price-label.estimated{border-color:var(--green)}
+.price-label.estimated .pl-tag{background:var(--green-bg);color:var(--green-dark)}
 
 /* ---------- What-if slider ---------- */
 .whatif input[type=range]{width:100%;accent-color:var(--green-dark);margin:14px 0 6px}
@@ -340,14 +347,14 @@ footer.site{border-top:1px solid var(--border);padding:20px;text-align:center;fo
   <section class="step" id="step-welcome" aria-labelledby="welcomeH">
     <div class="step-head">
       <h1 id="welcomeH" tabindex="-1">Let's get you verified for <mark>2028 coverage</mark></h1>
-      <p>Before you can see plans with accurate pricing, we need to verify a few things about your household. It takes about <strong>5–10 minutes</strong>, and your information is secure.</p>
+      <p>Before you can see plan prices that include financial help, we need to verify a few things about your household. It takes about <strong>5–10 minutes</strong>. Prototype demo — nothing you enter leaves this device.</p>
     </div>
 
     <div class="callout info" style="max-width:56ch">
-      <span>New for 2028: everyone who wants <button class="tip-link" data-tip="tip-aptc" aria-expanded="false" aria-label="What is APTC? Tap to learn more">financial help with premiums</button> needs to confirm their information each year, even if your coverage used to renew automatically.</span>
+      <span>New for Plan Year 2028: CMS has announced new verification requirements — certain eligibility information must be verified before <button class="tip-link" data-tip="tip-aptc" aria-expanded="false" aria-label="What is APTC? Tap to learn more">premium subsidies</button> can be applied. Final details are still being developed.</span>
     </div>
     <div class="tip-box" id="tip-aptc" role="note">
-      <strong>APTC (Advance Premium Tax Credit)</strong> is the subsidy that lowers your monthly health insurance payment. Starting with 2028 coverage, it can't be applied until you verify your household information.
+      <strong>APTC (Advance Premium Tax Credit)</strong> is the subsidy that lowers your monthly health insurance payment. Starting with Plan Year 2028, CMS requires certain eligibility information to be verified before it can be applied.
     </div>
 
     <div class="path-cards">
@@ -362,14 +369,14 @@ footer.site{border-top:1px solid var(--border);padding:20px;text-align:center;fo
     </div>
 
     <div class="trust-row">
-      <div>🔒 Bank-level encryption</div>
+      <div>Prototype demo — synthetic data only</div>
       <div>⏱️ 5–10 minutes</div>
       <div>💾 Save and finish later</div>
     </div>
 
     <details class="why">
       <summary>Why is this required now?</summary>
-      <div class="why-body">Starting with Plan Year 2028, federal rules require every consumer to actively verify their eligibility information before receiving premium subsidies. Automatic renewal with subsidies is no longer allowed, so completing this once per year keeps your financial help in place.</div>
+      <div class="why-body">Under Public Law 119-21, CMS requires certain eligibility elements to be verified before APTC is issued, with new Exchange verification requirements effective beginning Plan Year 2028 (see the <a href="https://www.cms.gov/newsroom/fact-sheets/cms-actions-protect-consumers-strengthen-exchange-program-integrity" target="_blank" rel="noopener">CMS Exchange Program Integrity fact sheet</a>; implementation details are still in development). This prototype tests one possible consumer experience for that requirement — it is not a final workflow or a statement of policy.</div>
     </details>
   </section>
 
@@ -556,7 +563,7 @@ footer.site{border-top:1px solid var(--border);padding:20px;text-align:center;fo
     </div>
 
     <div class="privacy-note">
-      <span>This information is used only to determine your eligibility for marketplace coverage and financial assistance. It is not shared with immigration enforcement agencies.</span>
+      <span>This information is used only to work out your eligibility for marketplace coverage and financial assistance.</span>
     </div>
 
     <div class="onfile returning-only" id="citOnfile">
@@ -752,7 +759,7 @@ footer.site{border-top:1px solid var(--border);padding:20px;text-align:center;fo
   <section class="step" id="step-documents" hidden aria-labelledby="docsH">
     <div class="step-head">
       <h2 id="docsH" tabindex="-1">Upload your supporting documents</h2>
-      <p>New for 2028: your subsidy can't be confirmed until your documents are verified. Uploading them now means your verification won't get stuck waiting on paperwork.</p>
+      <p>This demo collects documents before you submit — a deliberate prototype choice to test proactive evidence collection. Final Plan Year 2028 rules on when documents are required aren't settled. Uploading now means an electronic mismatch won't stall your verification later.</p>
     </div>
     <!-- INTEGRATION POINT: Document Upload Service — accept photos/scans here,
          virus-scan and store them, and attach them to the verification request
@@ -761,7 +768,7 @@ footer.site{border-top:1px solid var(--border);padding:20px;text-align:center;fo
     <div class="callout info"><span>Photos from your phone are fine. Just make sure all four corners of the page are visible and the text is readable.</span></div>
     <details class="why">
       <summary>Why do I need to provide this?</summary>
-      <div class="why-body">Starting with Plan Year 2028, subsidies can't be applied until your information is verified. If the electronic check hits a mismatch, these documents resolve it immediately — without them, your subsidy would be delayed until you sent them in.</div>
+      <div class="why-body">CMS requires verification of certain eligibility information before subsidies can be applied for Plan Year 2028 (see the CMS fact sheet linked on the first screen). Whether documents are collected up front like this or only after a mismatch is still an open question — this demo tests the up-front approach.</div>
     </details>
   </section>
 
@@ -777,9 +784,9 @@ footer.site{border-top:1px solid var(--border);padding:20px;text-align:center;fo
     <div class="card">
       <label class="check-row" style="font-size:15.5px">
         <input type="checkbox" id="attestChk">
-        <span>I confirm that the information above is accurate to the best of my knowledge.</span>
+        <span>I confirm the information above is accurate to the best of my knowledge. I understand this starts the verification process — it is not an eligibility determination.</span>
       </label>
-      <p class="hint" style="margin-top:10px">Verification typically takes a few seconds. In some cases, we may need additional documentation, which could take 1–2 business days.</p>
+      <p class="hint" style="margin-top:10px">Some verifications finish right away. Others go to specialist review, which can take 1–2 business days — you'll see your status either way, and a pending review is not a denial.</p>
     </div>
   </section>
 
@@ -789,6 +796,7 @@ footer.site{border-top:1px solid var(--border);padding:20px;text-align:center;fo
       <div class="spinner" aria-hidden="true"></div>
       <h2 id="resultH" tabindex="-1">Checking your information…</h2>
       <p id="loadingMsg" aria-live="polite">Connecting securely to the marketplace</p>
+      <p class="hint" style="margin-top:8px">Some checks finish right away; others go to specialist review. You'll get a status either way.</p>
     </div>
     <div id="resultBody" hidden></div>
   </section>
@@ -800,16 +808,20 @@ footer.site{border-top:1px solid var(--border);padding:20px;text-align:center;fo
       <p id="dashGreeting">Here's where things stand for Plan Year 2028.</p>
     </div>
     <div class="dash-grid" id="dashGrid"></div>
+    <div class="callout info" id="demoEventCtl" hidden>
+      <span>Simulated status event: resolve this pending review to see how an update propagates to every status and price surface.</span>
+      <button class="btn btn-secondary btn-sm" id="simEventBtn">Simulate status update (demo)</button>
+    </div>
     <div class="card">
       <h3>Reminders we'll send you</h3>
-      <p class="sub">A preview of the nudges you'll get so you never miss a deadline.</p>
+      <p class="sub">A preview of the nudges you'll get so you never miss a deadline. Sample copy — demo scenario.</p>
       <div class="notify-mock">
         <div class="from">📱 SMS · Stride Health</div>
         Reminder: Complete your eligibility verification before October 15 to shop plans on Day 1 of Open Enrollment. Reply STOP to opt out.
       </div>
       <div class="notify-mock">
         <div class="from">✉️ Email · hello@stridehealth.com</div>
-        <strong>You're all set for Open Enrollment.</strong> Your verification is complete — we'll email you the moment plan shopping opens on November 1, 2027.
+        <strong>Status changes reach you everywhere.</strong> When your verification status updates, we'll text and email you — and the same status appears here and in plan shopping.
       </div>
     </div>
     <div class="wizard-nav">
@@ -822,9 +834,12 @@ footer.site{border-top:1px solid var(--border);padding:20px;text-align:center;fo
     <div class="result-hero">
       <div class="result-icon ok" aria-hidden="true">🛍️</div>
       <h2 id="shopH" tabindex="-1">Plan shopping</h2>
-      <p style="max-width:48ch;margin:10px auto 0">This is where you'd land in Stride's shopping experience, browsing plans with your verified subsidy already applied to every price.</p>
+      <p style="max-width:48ch;margin:10px auto 0">This is where you'd land in Stride's shopping experience. The label below shows how your verification status would carry into plan prices.</p>
       <!-- INTEGRATION POINT: Stride Plan Shopping — hand off the verified consumer
-           (with eligibility ID + confirmed APTC amount) into shopping/enrollment. -->
+           (with eligibility ID + authoritative APTC amount) into shopping/enrollment.
+           Prices must display a status-aware label: Authoritative with APTC,
+           Estimated, or Full price. -->
+      <div class="price-label" id="shopPriceLabel" style="max-width:46ch;margin:14px auto 0"></div>
       <div class="wizard-nav" style="justify-content:center;margin-top:28px">
         <button class="btn btn-secondary" onclick="app.showDashboard()">Back to my dashboard</button>
       </div>
@@ -841,7 +856,7 @@ footer.site{border-top:1px solid var(--border);padding:20px;text-align:center;fo
 </main>
 
 <footer class="site">
-  Prototype for demonstration only. Not a real application for coverage. · Partner of HealthCare.gov
+  Prototype for demonstration only. Not a real application for coverage. All results are simulated and use synthetic data. · Partner of HealthCare.gov
 </footer>
 
 <!-- Help widget -->
@@ -920,7 +935,7 @@ function blankState(){
     coverage:{ hasCov:'', types:[], empOffer:'', afford:'' },
     residence:{ street:'', city:'', state:'TX', zip:'', county:'', twelve:'', prevStreet:'', prevCityState:'', moveDate:'' },
     uploads:{ income:null, immigration:null, residency:null }, // {name, size} only — files aren't persisted in the prototype
-    attested:false, result:null, verifiedAt:null, subsidy:null
+    attested:false, result:null, verifiedAt:null, pendingSince:null, resultUpdatedAt:null, subsidy:null
   };
 }
 
@@ -985,6 +1000,13 @@ function fmtDate(iso){
   if(!iso) return '';
   const [y,m,d] = iso.split('-');
   return `${m}/${d}/${y}`;
+}
+function fmtDateTime(iso){
+  if(!iso) return '';
+  const d = new Date(iso);
+  if(isNaN(d)) return '';
+  return d.toLocaleDateString('en-US',{month:'short',day:'numeric'}) + ', ' +
+         d.toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit'});
 }
 function relLabel(r){
   return {spouse:'Spouse',daughter:'Daughter',son:'Son',parent:'Parent',other:'Other dependent'}[r]||r;
@@ -1399,29 +1421,52 @@ const app = {
     $('navNext').disabled = !S.attested;
   },
 
-  /* ---------- step 8: verification ---------- */
+  /* ---------- step 9: verification ---------- */
   runVerification(){
     $('resultLoading').hidden = false;
     $('resultBody').hidden = true;
     $('wizardNav').hidden = true;
-    const msgs = ['Connecting securely to the marketplace','Matching your household records','Checking income against federal data','Almost there…'];
+    const msgs = ['Connecting securely to the marketplace','Matching your household records','Checking income against federal data','Submitting your request for review'];
     let mi = 0;
     const cycle = setInterval(()=>{ mi=(mi+1)%msgs.length; $('loadingMsg').textContent = msgs[mi]; }, 700);
 
     // INTEGRATION POINT: CMS/FFM EDE API — submit the verification request and
-    // receive the real eligibility determination + APTC amount. The random
-    // outcome below is demo-only (70% verified / 20% docs / 10% unable).
+    // receive a request ID; the final status (verified / action required / not
+    // verified) arrives later as an asynchronous status event from the
+    // authoritative system. The random outcome below is demo-only
+    // (≈55% verified / 25% pending / 20% unable).
     setTimeout(()=>{
       clearInterval(cycle);
       if(!S.result){
         const roll = Math.random();
-        S.result = roll<0.70 ? 'verified' : roll<0.90 ? 'docs' : 'unable';
-        S.subsidy = estSubsidy(incomeTotal());
-        if(S.result==='verified') S.verifiedAt = new Date().toISOString();
+        S.result = roll<0.55 ? 'verified' : roll<0.80 ? 'pending' : 'unable';
+        S.resultUpdatedAt = new Date().toISOString();
+        if(S.result==='verified'){
+          S.verifiedAt = new Date().toISOString();
+          S.subsidy = estSubsidy(incomeTotal());
+        }
+        if(S.result==='pending') S.pendingSince = new Date().toISOString();
       }
       save();
       this.renderResult();
     }, 2400);
+  },
+
+  // Demo-only stand-in for the asynchronous status event described at the
+  // INTEGRATION POINT above: resolves a pending review and updates every
+  // status/price surface through the same code paths.
+  simulateStatusEvent(){
+    if(S.result!=='pending') return;
+    const roll = Math.random();
+    S.result = roll<0.45 ? 'verified' : roll<0.75 ? 'docs' : 'unable';
+    S.resultUpdatedAt = new Date().toISOString();
+    if(S.result==='verified'){
+      S.verifiedAt = new Date().toISOString();
+      S.subsidy = estSubsidy(incomeTotal());
+    }
+    save();
+    toast('Status update received (simulated event).');
+    this.showDashboard();
   },
 
   renderResult(){
@@ -1432,9 +1477,10 @@ const app = {
       body.innerHTML = `
         <div class="result-hero">
           <div class="result-icon ok" aria-hidden="true">✓</div>
-          <h2 tabindex="-1" id="resDoneH">You're verified!</h2>
-          <p class="subsidy-line">Your estimated monthly subsidy is <span class="amt">${fmt$(S.subsidy)}/mo</span></p>
-          <p style="margin-top:14px;max-width:46ch;margin-inline:auto">That's financial help applied straight to your premium. Your verification is valid for the PY 2028 enrollment period.</p>
+          <h2 tabindex="-1" id="resDoneH">Your information is verified</h2>
+          <p class="subsidy-line">Estimated subsidy: <span class="amt">${fmt$(S.subsidy)}/mo</span></p>
+          <p style="margin-top:6px;font-size:14px;color:var(--ink-soft)">Demo estimate — the Marketplace sets your official APTC amount.</p>
+          <p style="margin-top:14px;max-width:46ch;margin-inline:auto">Verified ${fmtDateTime(S.verifiedAt)}: the household, income, and citizenship details you submitted all checked out. This confirms your information — it is not an eligibility or enrollment approval.</p>
           ${S.path==='returning' ? `<p class="compare-line">Last year's subsidy: ${fmt$(MOCK_MEMBER.lastYearSubsidy)}/mo</p>`:''}
           <div class="wizard-nav" style="justify-content:center">
             <button class="btn btn-primary" onclick="app.showShopping()" id="ctaShop">Continue to Plan Shopping →</button>
@@ -1443,7 +1489,7 @@ const app = {
         </div>
         <div class="card whatif">
           <h3>What if my income changes?</h3>
-          <p class="sub">Drag to see how a different income could affect your estimated subsidy.</p>
+          <p class="sub">Demo math: drag to see how a different income could change the estimated subsidy.</p>
           <input type="range" id="whatifRange" min="10000" max="120000" step="1000" value="${Math.min(Math.max(total,10000),120000)}"
                  aria-label="Adjust projected income">
           <div class="row"><span>$10,000</span><span>$120,000</span></div>
@@ -1455,6 +1501,28 @@ const app = {
         out.textContent = `At ${fmt$(v)}/year → estimated ${fmt$(estSubsidy(v))}/month subsidy`;
       };
       range.addEventListener('input',upd); upd();
+    }
+    else if(S.result==='pending'){
+      body.innerHTML = `
+        <div class="result-hero">
+          <div class="result-icon pending" aria-hidden="true">…</div>
+          <h2 tabindex="-1" id="resDoneH">We received your information</h2>
+          <p style="margin-top:10px;max-width:48ch;margin-inline:auto">Your verification is in review. You don't need to do anything right now.</p>
+        </div>
+        <div class="card">
+          <h3>What's happening</h3>
+          <dl style="display:grid;grid-template-columns:minmax(110px,auto) 1fr;gap:8px 16px;font-size:15px;margin-top:12px">
+            <dt style="color:var(--ink-soft)">Received</dt><dd style="font-weight:500">${fmtDateTime(S.pendingSince)}</dd>
+            <dt style="color:var(--ink-soft)">Under review</dt><dd style="font-weight:500">The household, income, and citizenship details you submitted</dd>
+            <dt style="color:var(--ink-soft)">What to expect</dt><dd style="font-weight:500">Most reviews finish within 1–2 business days. We'll update your status when review completes.</dd>
+            <dt style="color:var(--ink-soft)">Your next step</dt><dd style="font-weight:500">Nothing right now — check your dashboard for updates.</dd>
+          </dl>
+        </div>
+        <div class="callout info">A pending review is not a denial. You can browse plans at full price while you wait.</div>
+        <div class="wizard-nav" style="justify-content:center">
+          <button class="btn btn-primary" onclick="app.showDashboard()">Go to my dashboard</button>
+          <button class="btn btn-secondary" onclick="app.showShopping()">Browse full-price plans →</button>
+        </div>`;
     }
     else if(S.result==='docs'){
       const uploaded = requiredDocs().filter(d=>S.uploads[d.key]);
@@ -1470,7 +1538,7 @@ const app = {
           <p class="sub">${flagged.title}${S.uploads[flagged.key]?` — the file you sent (<strong>${S.uploads[flagged.key].name}</strong>) was blurry or cut off.`:''}</p>
           <div class="upload-drop"><strong>Re-upload ${flagged.title.toLowerCase()}</strong><br>Drag a photo or PDF here, or tap to take a picture<br><span style="font-size:13px">(placeholder — re-uploads aren't wired up in this prototype)</span></div>
         </div>
-        <div class="callout good">You can still browse plans, but your final subsidy amount will be confirmed once we verify the new copy.</div>
+        <div class="callout good">While this is outstanding, plan prices will show as full price. Waiting on a document is not a denial.</div>
         <div class="wizard-nav" style="justify-content:center">
           <button class="btn btn-primary" onclick="app.showShopping()">Browse plans anyway →</button>
           <button class="btn btn-secondary" onclick="app.showDashboard()">Go to my dashboard</button>
@@ -1480,8 +1548,8 @@ const app = {
       body.innerHTML = `
         <div class="result-hero">
           <div class="result-icon na" aria-hidden="true">·﹏·</div>
-          <h2 tabindex="-1" id="resDoneH">We weren't able to verify your eligibility for subsidies at this time</h2>
-          <p style="margin-top:10px;max-width:52ch;margin-inline:auto">You can still enroll in a health plan at full price. If you believe this is an error, here are your options:</p>
+          <h2 tabindex="-1" id="resDoneH">We couldn't verify your information yet</h2>
+          <p style="margin-top:10px;max-width:52ch;margin-inline:auto">This isn't a decision about your eligibility — a mismatch means we need more information. You can still shop at full price. If you think something went wrong:</p>
         </div>
         <div class="card">
           <h3>Your options</h3>
@@ -1503,6 +1571,25 @@ const app = {
     document.querySelectorAll('.step').forEach(s=>s.hidden=true);
     $('step-shopping').hidden=false;
     $('progressWrap').hidden = true; $('wizardNav').hidden = true;
+    // Status-aware price label — same vocabulary as the result and dashboard
+    // screens. Verified shows Estimated; every other state shows Full price.
+    const lbl = $('shopPriceLabel');
+    let tag = 'Full price', txt = '', est = false;
+    if(S.result==='verified'){
+      est = true;
+      tag = 'Estimated';
+      txt = `Prices shown include your estimated ${fmt$(S.subsidy)}/mo subsidy. This is demo math — your official APTC amount is set by the Marketplace.`;
+    } else if(S.result==='pending'){
+      txt = 'Your verification is still in review, so prices don\'t include financial help yet. A pending review is not a denial — prices will update when your status changes.';
+    } else if(S.result==='docs'){
+      txt = 'Prices don\'t include financial help until your document is accepted and verification completes.';
+    } else if(S.result==='unable'){
+      txt = 'We couldn\'t verify your information, so prices are full price. This is not an eligibility decision.';
+    } else {
+      txt = 'Complete pre-verification to see prices with financial help applied.';
+    }
+    lbl.className = 'price-label' + (est ? ' estimated' : '');
+    lbl.innerHTML = `<span class="pl-tag">${tag}</span><br>${txt}`;
     const h=$('shopH'); h.focus();
     window.scrollTo({top:0});
   },
@@ -1515,19 +1602,24 @@ const app = {
     S.view = 'dashboard'; save();
     const name = S.personal.first || 'there';
     $('dashGreeting').textContent = `Hi ${name} — here's where things stand for Plan Year 2028.`;
+    // Status vocabulary is shared with the result and shopping screens
+    // (docs/specs/pev-status-lifecycle.md). No emoji status markers: the text
+    // itself carries the state, never color alone.
     const statusMap = {
-      verified:['✅ Verified','Your subsidy is locked in for open enrollment.'],
-      docs:['🟡 Pending documents','We’re waiting on your documents to finish verification.'],
-      unable:['⚪ Not verified','You can enroll at full price or request a manual review.']
+      verified:['Verified', `Information verified ${fmtDateTime(S.verifiedAt)}. Not an eligibility or enrollment approval.`],
+      pending:['Pending review', `Received ${fmtDateTime(S.pendingSince)}. Under review — nothing for you to do right now.`],
+      docs:['Action required','One document needs a clearer copy before verification can finish.'],
+      unable:['Not verified','More information is needed. This is not an eligibility decision.']
     };
-    const [stat, statSub] = statusMap[S.result] || ['— Not started','Complete pre-verification to see your subsidy.'];
+    const [stat, statSub] = statusMap[S.result] || ['— Not started','Complete pre-verification to see your estimated subsidy.'];
     $('dashGrid').innerHTML = `
       <div class="dash-card"><div class="k">Verification status</div><div class="v">${stat}</div><p style="font-size:14px;margin-top:6px">${statSub}</p></div>
-      <div class="dash-card"><div class="k">Estimated subsidy</div><div class="v">${S.result==='verified'?fmt$(S.subsidy)+'/mo':'—'}</div><p style="font-size:14px;margin-top:6px">${S.result==='verified'?'Applied automatically when you shop.':'Available after verification.'}</p></div>
-      <div class="dash-card"><div class="k">Open enrollment</div><div class="v">Nov 1, 2027</div><p style="font-size:14px;margin-top:6px">Shopping opens for Plan Year 2028 coverage.</p></div>
+      <div class="dash-card"><div class="k">Estimated subsidy</div><div class="v">${S.result==='verified'?fmt$(S.subsidy)+'/mo':'—'}</div><p style="font-size:14px;margin-top:6px">${S.result==='verified'?'Demo estimate — official APTC is set by the Marketplace.':(S.result==='pending'?'Available once review completes.':'Available after verification.')}</p></div>
+      <div class="dash-card"><div class="k">Open enrollment</div><div class="v">Nov 1, 2027</div><p style="font-size:14px;margin-top:6px">Shopping opens for Plan Year 2028 coverage. Demo scenario — final PY2028 dates aren't set.</p></div>
       <div class="dash-card"><div class="k">Next step</div>
         <div style="margin-top:8px"><button class="btn btn-primary btn-sm" onclick="app.showShopping()">${S.result==='verified'?'Preview plan shopping →':'Browse plans →'}</button></div>
-        <p style="font-size:14px;margin-top:10px">We'll notify you the moment enrollment opens.</p></div>`;
+        <p style="font-size:14px;margin-top:10px">We'll notify you when your verification status changes.</p></div>`;
+    $('demoEventCtl').hidden = S.result!=='pending';
     const h=$('dashH'); h.focus();
     window.scrollTo({top:0});
   },
@@ -1547,7 +1639,7 @@ document.addEventListener('DOMContentLoaded', ()=>{
   (function(){
     const oe = new Date('2027-11-01T00:00:00');
     const days = Math.max(0, Math.ceil((oe - new Date())/86400000));
-    $('countdownBanner').textContent = `Open Enrollment starts November 1, 2027 — ${days} days away. Complete your verification early to avoid delays.`;
+    $('countdownBanner').textContent = `Demo scenario: Open Enrollment starts November 1, 2027 — ${days} days away. Complete your verification early to avoid delays.`;
   })();
 
   /* welcome paths */
@@ -1686,14 +1778,15 @@ document.addEventListener('DOMContentLoaded', ()=>{
 
   /* --- dashboard --- */
   $('dashRestart').addEventListener('click',()=>app.restart());
+  $('simEventBtn').addEventListener('click',()=>app.simulateStatusEvent());
 
   /* --- help widget --- */
   const helpAnswers = [
     [/income|money|salary|wage/i,'Count income for everyone in your tax household: jobs, self-employment, unemployment, Social Security, rental income. Don’t count child support, SSI, or gifts.'],
     [/household|dependent|kid|child|spouse/i,'Your household is everyone on your tax return: you, your spouse if filing jointly, and anyone you claim as a dependent — even if they don’t need coverage.'],
-    [/document|proof|upload|w-2|1099/i,'Usually nothing up front! If we can’t verify automatically, we’ll ask for one document — like a pay stub, W-2, or utility bill — and you’ll have plenty of time to send it.'],
-    [/subsid|aptc|credit|saving/i,'Your subsidy (APTC) is based on your household size and expected income. Once verified, it’s applied directly to your monthly premium — no waiting for tax season.'],
-    [/deadline|when|date|open enrollment/i,'Open Enrollment for 2028 coverage starts November 1, 2027. Verify before October 15 and you can shop with accurate prices on day one.']
+    [/document|proof|upload|w-2|1099/i,'In this demo, you\'ll upload proof of income before submitting, plus an immigration or residency document if your answers call for one. Phone photos are fine as long as all four corners and the text are visible.'],
+    [/subsid|aptc|credit|saving/i,'Your subsidy (APTC) is based on your household size and expected income. This prototype shows a demo estimate — the Marketplace sets your official amount after verification.'],
+    [/deadline|when|date|open enrollment/i,'In this demo scenario, Open Enrollment for 2028 coverage starts November 1, 2027 — verify by October 15 to shop with prices that include financial help on day one. Final PY2028 dates aren\'t set.']
   ];
   $('helpFab').addEventListener('click',()=>{
     const p=$('helpPanel'); const open=!p.classList.contains('open');

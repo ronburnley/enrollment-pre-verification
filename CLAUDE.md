@@ -51,9 +51,16 @@ and the resume conditions at the bottom of the file all key off step indexes.
 - Returning members get mock data (Maria Santos, defined in `MOCK_MEMBER`) and a
   confirm-card pattern ("Is this still correct?") on Personal, Citizenship, and
   Residence instead of raw forms.
-- Verification outcome is random, weighted 70% verified / 20% needs-docs /
-  10% unable (`runVerification`). Subsidy uses simplified FPL math in
-  `estSubsidy`: <150% FPL = $800/mo, <250% = $400, ≤400% = $150, else $0.
+- Status model (see `docs/specs/pev-status-lifecycle.md`): submission resolves
+  in `runVerification` to verified (~55%) / pending (~25%) / unable (~20%).
+  Pending persists `pendingSince` and renders a neutral received/under-review
+  screen; `app.simulateStatusEvent()` — wired to the dashboard's demo-labeled
+  "Simulate status update" button — resolves it to verified (~45%) / docs
+  (~30%) / unable (~25%) through the same paths as a fresh result. Legacy
+  saved states with `result:'docs'` still render the docs screen. Subsidy uses
+  simplified FPL math in `estSubsidy`: <150% FPL = $800/mo, <250% = $400,
+  ≤400% = $150, else $0. Every displayed amount must stay labeled Estimated or
+  Full price (`showShopping` builds the label from `S.result`).
 - Uploads store `{name, size}` only — never file contents (localStorage limits).
   Each slot has a "use a sample document" link so demos don't need real files.
 
