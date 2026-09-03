@@ -42,8 +42,12 @@ staging, or production environment model in the repository.
 2. Returning users receive a synthetic member snapshot; new users begin blank.
 3. Each step updates one client-side state object and saves it locally.
 4. The review screen renders the collected state and document metadata.
-5. Submission runs a timed simulation that randomly chooses a result.
-6. The result and dashboard display a simplified subsidy estimate or next step.
+5. Submission runs a timed simulation that randomly chooses verified, pending,
+   or not verified; a demo-labeled dashboard control later resolves a pending
+   case through the same code path, standing in for an asynchronous status
+   event.
+6. The result, dashboard, and shopping placeholder share one status vocabulary
+   and derive their price labels (Estimated or Full price) from it.
 
 No data leaves the browser as part of the application flow. The Google Fonts
 request is optional presentation infrastructure and not an application-data

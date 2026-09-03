@@ -145,17 +145,25 @@ conditional, post-mismatch evidence model as authoritative guidance develops.
 
 ## Status Model
 
-The current prototype demonstrates three result families:
+The current prototype demonstrates four consumer-facing states:
 
 - **Verified:** the simulated check completed successfully.
-- **Needs evidence:** an item requires another document or review.
-- **Unable to verify:** the simulated check did not complete successfully.
+- **Pending:** information was received and is under review; no result yet.
+- **Action required:** a document needs to be re-supplied.
+- **Not verified:** the simulated check did not complete successfully.
+
+Submissions resolve to Verified, Pending, or Not verified; Action required
+arrives as a post-submission status change. A demo-labeled "Simulate status
+update" control on the dashboard resolves a Pending case so stakeholders can
+see how a status event propagates to every status and price surface. See
+`docs/specs/pev-status-lifecycle.md` for the prototype states, transitions,
+timestamps, demo reason codes, retry behavior, and allowed downstream actions.
 
 Internal discovery suggests a future consumer-facing model centered on
 **Verified**, **Pending**, and **Not verified**, with status delivered through an
-event-based update. That lifecycle remains a working hypothesis. The next
-feature specification should define the authoritative states, transitions,
-reason codes, timestamps, retry behavior, and allowed downstream actions.
+event-based update. That lifecycle remains a working hypothesis. Final
+authoritative states, transitions, reason codes, timestamps, retry behavior,
+and allowed downstream actions still require CMS guidance.
 
 ## Durable Product Rules
 
@@ -188,23 +196,36 @@ The existing static demo includes:
 - browser-only save and resume;
 - required demo document slots based on consumer answers;
 - a review screen with confirmed/updated markers;
-- randomly generated result states;
+- four result states (Verified, Pending, Action required, Not verified) with
+  a pending received timestamp and a demo status-event control on the
+  dashboard;
+- status-aware price labels (Estimated or Full price) on the shopping
+  placeholder;
 - simplified, non-authoritative subsidy estimates; and
 - dashboard and plan-shopping placeholders.
 
 All integrations, verification results, document processing, and financial
 calculations are mocked.
 
-### Known gaps to resolve before a broader demo
+### Copy alignment (September 3, 2026)
 
-The application code was not changed during this documentation setup. Existing
-copy still includes immediate-verification, subsidy-confirmation, fixed-date,
-and privacy assurances that need policy and product review. Its help response
-about documents also conflicts with the current required-upload flow. Those
-statements must not be treated as product requirements or regulatory facts.
+The prototype copy was aligned with this document: 2028 policy statements are
+dated to the CMS fact-sheet level and link the source; fixed dates are labeled
+as a demo scenario; immediate-verification and subsidy-confirmation promises
+were removed; every financial amount is labeled Estimated or Full price;
+verification is consistently distinguished from eligibility determination; and
+the help responses now match the required-upload flow. The citizenship screen
+no longer makes assurances that require policy review.
 
-The next prototype iteration should align this copy with the documented
-verification-versus-eligibility boundary and exercise a genuine pending state.
+### Remaining gaps to resolve before a broader demo
+
+- Document re-upload for the Action required state is a labeled placeholder,
+  not wired.
+- The conditional, post-mismatch evidence model is still untested; the demo
+  only exercises proactive collection.
+- No service-unavailable/timeout state is demonstrated.
+- The four-state model and price-label vocabulary are prototype hypotheses
+  pending authoritative CMS guidance.
 
 ## Success for the Prototype
 
