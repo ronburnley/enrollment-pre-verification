@@ -1547,7 +1547,13 @@ const app = {
     else {
       body.innerHTML = `
         <div class="result-hero">
-          <div class="result-icon na" aria-hidden="true">·﹏·</div>
+          <div class="result-icon na" aria-hidden="true">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" focusable="false">
+              <path d="M10 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h9l5 5v3M14 3v5h5M7 8h3M7 12h3"/>
+              <circle cx="16" cy="16" r="4"/>
+              <path d="m19 19 3 3"/>
+            </svg>
+          </div>
           <h2 tabindex="-1" id="resDoneH">We couldn't verify your information yet</h2>
           <p style="margin-top:10px;max-width:52ch;margin-inline:auto">This isn't a decision about your eligibility — a mismatch means we need more information. You can still shop at full price. If you think something went wrong:</p>
         </div>
