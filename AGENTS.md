@@ -38,6 +38,7 @@ ARCHITECTURE.md             Current technical system and boundaries
 CLAUDE.md                   Detailed prototype implementation notes
 docs/specs/                 Feature specifications and template
 docs/decisions/             Architecture decisions and template
+tests/verification.test.cjs Dependency-free lifecycle regression tests
 ```
 
 ## Commands
@@ -50,9 +51,15 @@ python3 -m http.server 8123
 
 Then open `http://localhost:8123`.
 
-There is no automated test, lint, type-check, or build command yet. For changes
-to `index.html`, exercise the affected path in a browser and verify the browser
-console stays free of errors. Preserve and restore
+Run the verification lifecycle tests with Node's built-in test runner:
+
+```bash
+node --test tests/verification.test.cjs
+```
+
+There is no package manager, lint, type-check, or build command. For changes to
+`index.html`, run relevant lifecycle tests, exercise the affected path in a
+browser, and verify the browser console stays free of errors. Preserve and restore
 `localStorage['stride-preverify-v1']` when an existing walkthrough is present.
 
 ## Domain and Safety Rules

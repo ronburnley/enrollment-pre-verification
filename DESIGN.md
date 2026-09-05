@@ -77,6 +77,8 @@ Each task screen should present, in order:
 - Preserve entered information when the consumer moves backward.
 - Never use color alone to communicate status or errors.
 - Keep touch targets comfortable and avoid horizontal scrolling on mobile.
+- On mobile result, dashboard, and shopping screens, keep Help in page flow so
+  it cannot cover recovery actions.
 
 ## Confirmation and Review
 
@@ -98,11 +100,19 @@ Each task screen should present, in order:
   unreadable image or missing page.
 - Do not expose full document identifiers after upload.
 - Sample documents must be visibly synthetic.
+- For replacement evidence, identify the requested fact, document, and household
+  or applicant scope. Keep this request stable across reload and navigation.
+- Show selection as a draft. Require an explicit replacement submission before
+  displaying received/pending status; a selected filename alone is not receipt.
+- Preserve the original evidence metadata until the replacement is submitted.
+- Provide a sample replacement so the recovery path needs no real documents.
 
 ## Status Presentation
 
 The same status vocabulary and visual treatment should appear in the standalone
-experience, EDE handoff, dashboard, and notifications.
+experience, dashboard, and shopping placeholder. Future EDE handoffs and
+notifications should use that vocabulary too; neither is a live integration in
+the prototype.
 
 - **Verified:** positive but precise; state what was verified and when.
 - **Pending:** neutral; state what was received, what is being reviewed, and
@@ -113,7 +123,42 @@ experience, EDE handoff, dashboard, and notifications.
   verification result.
 
 Any premium display near these statuses must say Authoritative with APTC,
-Estimated, or Full price.
+Estimated, or Full price. The current prototype uses only Estimated and Full
+price because it has no authoritative APTC result.
+
+### Recovery and dashboard actions
+
+Make the primary dashboard action match the current case:
+
+| Case | Primary action |
+| --- | --- |
+| Pending | View review details and receipt |
+| Action required | Replace the requested evidence |
+| Not verified | Request manual review |
+| Service unavailable | Retry the check |
+| Verified | Continue to shopping |
+
+A secondary action may browse the shopping placeholder at every status. Full
+price remains explicit until Verified, when prices use a demo estimate.
+Manual-review and replacement submissions show saved received/pending receipts
+and prevent duplicate requests. A later status update must not pull the consumer
+away from the view they are using.
+
+### Presenter controls
+
+Keep scenario selection and simulated event actions in a separate, collapsible
+**Demo controls** area. Label the controls as demo-only and explain what the
+selected scenario demonstrates. These controls are for the presenter, separate
+from the consumer's recovery action.
+
+The five choices are Verified (default), Pending then verified, Document
+correction, Manual review, and Service unavailable. Lock the selection once
+submitted so a saved case cannot change scenarios mid-review. Starting a new
+verification unlocks the picker and retains the previous choice. Simulated
+events should be available only when they can advance the current pending case.
+After submission, show the current scenario as text instead of a disabled
+dropdown. Provide **Start another demo** beside the explanation that it resets
+the walkthrough; focus the enabled picker when the presenter chooses it.
 
 ## Responsive and Accessibility Expectations
 

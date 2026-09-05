@@ -152,12 +152,27 @@ The current prototype demonstrates four consumer-facing states:
 - **Action required:** a document needs to be re-supplied.
 - **Not verified:** the simulated check did not complete successfully.
 
-Submissions resolve to Verified, Pending, or Not verified; Action required
-arrives as a post-submission status change. A demo-labeled "Simulate status
-update" control on the dashboard resolves a Pending case so stakeholders can
-see how a status event propagates to every status and price surface. See
-`docs/specs/pev-status-lifecycle.md` for the prototype states, transitions,
-timestamps, demo reason codes, retry behavior, and allowed downstream actions.
+The separate **Service unavailable** treatment means the simulated service
+failed to respond; it is not a consumer verification result. The case retains
+its answers and evidence and offers a retry.
+
+Five deterministic demo scenarios exercise these states: Verified (the
+default), Pending then verified, Document correction, Manual review, and
+Service unavailable. A collapsible Demo controls area selects the scenario
+before submission and locks it after submission. Starting a new verification
+unlocks the picker while keeping its selection. Demo controls also advance
+pending cases through simulated status events; they do not represent consumer
+actions or real service responses.
+
+Document correction requests one specific document after an initial pending
+review. The consumer stages a replacement and explicitly submits it, sees a
+received/pending receipt, and later receives a simulated Verified result.
+Manual review records one request, shows a persistent pending receipt, and
+later resolves to Verified. Retrying an unavailable service also enters Pending
+and later resolves to Verified. These outcomes are repeatable demo paths,
+not promises about real review outcomes or turnaround times. See
+`docs/specs/pev-status-lifecycle.md` for transitions, timestamps, persistence,
+retry behavior, and allowed downstream actions.
 
 Internal discovery suggests a future consumer-facing model centered on
 **Verified**, **Pending**, and **Not verified**, with status delivered through an
@@ -174,8 +189,11 @@ and allowed downstream actions still require CMS guidance.
   enrollment approval.
 - A mismatch means more information is needed; it does not by itself establish
   fraud or ineligibility.
+- A service failure must not be represented as Not verified.
 - The consumer must be able to understand which household member and fact an
   evidence request concerns.
+- Selecting replacement evidence is a draft action; explicit submission records
+  receipt and begins review. Receipt is not successful verification.
 - Prefilled information must be reviewable and editable before attestation.
 - Every financial amount must be labeled as authoritative, estimated, or
   full-price.
@@ -196,13 +214,21 @@ The existing static demo includes:
 - browser-only save and resume;
 - required demo document slots based on consumer answers;
 - a review screen with confirmed/updated markers;
-- four result states (Verified, Pending, Action required, Not verified) with
-  a pending received timestamp and a demo status-event control on the
-  dashboard;
+- four verification result states (Verified, Pending, Action required,
+  Not verified), plus a separate service-unavailable treatment;
+- a collapsible, pre-submission picker for five deterministic demo scenarios;
+- scoped document replacement with a saved draft, explicit submission, and a
+  pending receipt, using only filename and size metadata;
+- a persistent manual-review request and service retry, each followed by a
+  pending receipt and a simulated status event;
+- a dashboard primary action based on the case: view pending details, replace
+  evidence, request manual review, retry the service, or continue to shopping;
+- received timestamps and demo status-event controls, with save/resume across
+  pending and recovery steps;
 - status-aware price labels (Estimated or Full price) on the shopping
   placeholder;
 - simplified, non-authoritative subsidy estimates; and
-- dashboard and plan-shopping placeholders.
+- a status dashboard and a plan-shopping placeholder.
 
 All integrations, verification results, document processing, and financial
 calculations are mocked.
@@ -217,13 +243,21 @@ verification is consistently distinguished from eligibility determination; and
 the help responses now match the required-upload flow. The citizenship screen
 no longer makes assurances that require policy review.
 
-### Remaining gaps to resolve before a broader demo
+### Recovery and repeatable demos (September 5, 2026)
 
-- Document re-upload for the Action required state is a labeled placeholder,
-  not wired.
+Document correction and manual-review requests now demonstrate the full return
+to Pending and a later simulated status update. Service unavailability has its
+own recovery path and preserves the consumer's work. A fixed scenario selected
+before submission replaces random outcomes, so stakeholders can repeat each
+journey. The nine-step flow and upfront document requirement are unchanged.
+
+### Remaining product questions
+
 - The conditional, post-mismatch evidence model is still untested; the demo
-  only exercises proactive collection.
-- No service-unavailable/timeout state is demonstrated.
+  still collects documents proactively and requests a replacement only after
+  submission in the document-correction scenario.
+- Real review ownership, turnaround times, notices, appeals, and outcomes remain
+  undefined; no review request or notification leaves the browser.
 - The four-state model and price-label vocabulary are prototype hypotheses
   pending authoritative CMS guidance.
 
