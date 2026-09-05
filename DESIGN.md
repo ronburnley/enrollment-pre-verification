@@ -156,6 +156,9 @@ correction, Manual review, and Service unavailable. Lock the selection once
 submitted so a saved case cannot change scenarios mid-review. Starting a new
 verification unlocks the picker and retains the previous choice. Simulated
 events should be available only when they can advance the current pending case.
+After submission, show the current scenario as text instead of a disabled
+dropdown. Provide **Start another demo** beside the explanation that it resets
+the walkthrough; focus the enabled picker when the presenter chooses it.
 
 ## Responsive and Accessibility Expectations
 

@@ -28,7 +28,9 @@ HTTP rather than opening `index.html` directly.
 Open **Demo controls** and choose a scenario before submitting. Verified is the
 default; the other choices demonstrate Pending then verified, Document
 correction, Manual review, and Service unavailable. The choice locks after
-submission. Starting a new verification unlocks it and keeps the prior choice.
+submission. The controls then show the current scenario and **Start another
+demo**. That action clears the current walkthrough, opens the picker, and keeps
+the prior scenario selected until you choose another.
 
 For a pending case, use the demo status-update action to advance the simulated
 review. Document correction requires selecting and explicitly submitting a

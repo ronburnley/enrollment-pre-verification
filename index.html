@@ -367,12 +367,14 @@ footer.site{border-top:1px solid var(--border);padding:20px;text-align:center;fo
   <details class="demo-controls" id="demoControls">
     <summary>Demo controls <span id="demoScenarioLabel"></span></summary>
     <div class="demo-body">
-      <div class="field">
+      <div class="field" id="demoScenarioField">
         <label for="demoScenario">Demo scenario</label>
         <select id="demoScenario" aria-describedby="demoScenarioHint demoScenarioLock"></select>
       </div>
+      <p id="demoCurrentScenario" hidden>Current scenario: <strong id="demoCurrentScenarioName"></strong></p>
       <p class="hint" id="demoScenarioHint"></p>
       <p class="hint" id="demoScenarioLock">Choose a scenario before submitting. All checks and status updates are simulated.</p>
+      <button class="btn btn-secondary btn-sm" id="demoRestartBtn" style="margin-top:12px" hidden>Start another demo</button>
       <button class="btn btn-secondary btn-sm" id="demoReturnBtn" style="margin-top:12px" hidden>Return to current verification</button>
       <div class="demo-event" id="demoEventCtl" hidden>
         <p class="hint" id="demoNextEvent"></p>
@@ -1201,11 +1203,16 @@ const app = {
     }
     const scenario = DEMO_SCENARIOS[S.demoScenario] || DEMO_SCENARIOS.verified;
     select.value = S.demoScenario;
-    select.disabled = !!(S.submittedAt || S.result || S.serviceUnavailableAt);
+    const locked = !!(S.submittedAt || S.result || S.serviceUnavailableAt);
+    select.disabled = locked;
+    $('demoScenarioField').hidden = locked;
+    $('demoCurrentScenario').hidden = !locked;
+    $('demoCurrentScenarioName').textContent = scenario.label;
+    $('demoRestartBtn').hidden = !locked;
     $('demoScenarioLabel').textContent = `— ${scenario.label}`;
     $('demoScenarioHint').textContent = scenario.hint;
-    $('demoScenarioLock').textContent = select.disabled
-      ? 'Scenario locked for this case. Start a new verification to choose another. No real checks or notifications are sent.'
+    $('demoScenarioLock').textContent = locked
+      ? 'This walkthrough has been submitted. Starting another demo resets the walkthrough so you can choose a different scenario.'
       : 'Choose a scenario before submitting. All checks and status updates are simulated.';
     $('demoEventCtl').hidden = S.result!=='pending';
     $('demoReturnBtn').hidden = !(S.step===0 && (S.result || S.serviceUnavailableAt));
@@ -1938,6 +1945,11 @@ document.addEventListener('DOMContentLoaded', ()=>{
     save(); app.renderDemoControls();
   });
   $('demoReturnBtn').addEventListener('click',()=>app.showResult());
+  $('demoRestartBtn').addEventListener('click',()=>{
+    app.restart();
+    $('demoControls').open=true;
+    $('demoScenario').focus();
+  });
 
   /* wizard nav */
   $('navNext').addEventListener('click',()=>app.next());
