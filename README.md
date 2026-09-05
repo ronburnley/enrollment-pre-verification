@@ -23,6 +23,32 @@ Open `http://localhost:8123` in a browser.
 The experience uses browser storage to preserve demo progress, so serve it over
 HTTP rather than opening `index.html` directly.
 
+## Repeatable Demo Scenarios
+
+Open **Demo controls** and choose a scenario before submitting. Verified is the
+default; the other choices demonstrate Pending then verified, Document
+correction, Manual review, and Service unavailable. The choice locks after
+submission. Starting a new verification unlocks it and keeps the prior choice.
+
+For a pending case, use the demo status-update action to advance the simulated
+review. Document correction requires selecting and explicitly submitting a
+replacement; a sample replacement is available. Manual review saves a request
+receipt. Service retry preserves the case. Each recovery enters Pending before
+a later simulated event resolves it to Verified. No document contents, review
+requests, or notifications are sent to a service.
+
+## Verify Changes
+
+The lifecycle regression tests use Node's built-in runner without dependencies:
+
+```bash
+node --test tests/verification.test.cjs
+```
+
+Also exercise changed paths in the browser, including reload during pending or
+document replacement, and check for console errors. Preserve and restore
+`localStorage['stride-preverify-v1']` when testing an existing walkthrough.
+
 ## Project Documentation
 
 - `PRODUCT.md` defines the product purpose, users, workflows, product rules,
@@ -42,6 +68,8 @@ are simulated, and generated verification and subsidy results are not real.
 
 ## Status
 
-The prototype is in product discovery. The next recommended artifact is a
-feature specification for the verification-status lifecycle and its handoff to
-an EDE shopping or enrollment flow.
+The prototype is in product discovery. Its current status and recovery behavior
+is defined in `docs/specs/pev-status-lifecycle.md`. Next, validate the consumer
+recovery experience with stakeholders and resolve the policy, review ownership,
+and EDE handoff questions in `PRODUCT.md`. Production integrations and final
+Plan Year 2028 requirements remain open.
