@@ -1740,7 +1740,12 @@ const app = {
       const copy=this.pendingCopy();
       body.innerHTML = `
         <div class="result-hero">
-          <div class="result-icon pending" aria-hidden="true">…</div>
+          <div class="result-icon pending" aria-hidden="true">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" focusable="false">
+              <path d="M5 3h14M5 21h14M7 3v3a4 4 0 0 0 1.6 3.2L12 12l3.4-2.8A4 4 0 0 0 17 6V3M7 21v-3a4 4 0 0 1 1.6-3.2L12 12l3.4 2.8A4 4 0 0 1 17 18v3"/>
+              <path d="M9 6h6M9 18h6"/>
+            </svg>
+          </div>
           <h2 tabindex="-1" id="resDoneH">${copy.heading}</h2>
           <p style="margin-top:10px;max-width:48ch;margin-inline:auto">${copy.detail}</p>
         </div>
